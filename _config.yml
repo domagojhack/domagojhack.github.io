@@ -4,8 +4,8 @@
 
 title: blank # the website title (if blank, full name will be used instead)
 first_name: Domagoj
-middle_name: K.
-last_name: Hackenberger
+middle_name:
+last_name: K. Hackenberger
 email: domagojhack@gmail.com
 description: > # the ">" symbol means to ignore newlines until "footer_text:"
   Computational ecology
