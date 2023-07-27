@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://domagojhack.github.io/domagoj/sitemap.xml
+Sitemap: https://domagojhack.github.io/sitemap.xml
