@@ -1,11 +1,11 @@
 ---
 layout: page
-title: project 2
-description: a project with a background image and giscus comments
-img: assets/img/3.jpg
-importance: 2
+title: Cadapt
+description: Adaptation of mosquito population control to climate change
+img: assets/img/12.jpg
+importance: 1
 category: work
-giscus_comments: true
+related_publications: einstein1956investigations, einstein1950meaning
 ---
 
 Every project has a beautiful feature showcase page.

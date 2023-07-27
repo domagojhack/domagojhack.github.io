@@ -1,69 +1,70 @@
 {
   "basics": {
-    "name": "Albert Einstein",
+    "name": "Domagoj K. Hackenberger",
     "label": "Scientist",
     "image": "",
-    "email": "albert@einstein.de",
-    "phone": "(912) 123-4567",
-    "url": "https://alshedivat.github.io/al-folio/",
-    "summary": "A German-born theoretical physicist, widely ranked among the greatest and most influential scientists of all time",
+    "email": "domagojhack@gmail.com",
+    "phone": "",
+    "url": "https://domagojhack.github.io",
+    "summary": "Computational ecology scientist",
     "location": {
-      "address": "2712 Broadway St",
-      "postalCode": "CA 94115",
-      "city": "San Francisco",
-      "countryCode": "US",
-      "region": "California"
+      "address": "",
+      "postalCode": "",
+      "city": "Osijek",
+      "countryCode": "HR",
+      "region": ""
     },
     "profiles": [
       {
         "network": "Twitter",
-        "username": "AlbertEinstein",
-        "url": "https://twitter.com/AlbertEinstein"
+        "username": "domagojkh",
+        "url": "https://twitter.com/domagojkh"
       }
     ]
   },
   "work": [
     {
-      "name": "Institute for Advanced Study, Princeton University",
-      "position": "Professor of Theoretical Physics",
-      "url": "https://example.com",
-      "startDate": "1933-01-01",
-      "endDate": "1955-01-01",
-      "summary": "Teaching at Palmer Physical Laboratory (now 302 Frist Campus Center). While not a professor at Princeton, I associated with the physics professors and continued to give lectures on campus.",
-      "highlights": [
-        "Relativity"
-      ]
+      "name": "Josip Juraj Strossmayer University of Osijek, Department of Biology",
+      "position": "Research assistant",
+      "url": "",
+      "startDate": "2021-11-01",
+      "endDate": "",
+      "summary": "Worked on a number of research projects; DEB modeling, climate change impact assessment on insect populations, high performance computing in ecology",
+      "highlights": []
     }
   ],
   "volunteer": [],
   "education": [
     {
-      "institution": "University of Zurich, Zurich, Switzerland",
-      "url": "https://www.uzh.ch/",
-      "area": "Software Development",
+      "institution": "Faculty of Science, University of Zagreb",
+      "url": "",
+      "area": "Biology",
       "studyType": "PhD",
-      "startDate": "1905-01-01",
-      "endDate": "1905-01-01",
+      "startDate": "2017",
+      "endDate": "",
       "score": "",
-      "courses": [
-        "Theory of Relativity"
-      ]
+      "courses": []
+    },
+    {
+      "institution": "Josip Juraj Strossmayer University of Osijek, Department of Biology",
+      "url": "",
+      "area": "Environment science",
+      "studyType": "MSc",
+      "startDate": "2014",
+      "endDate": "2017",
+      "score": "",
+      "courses": []
     }
   ],
   "awards": [
-    {
-      "title": "Nobel Prize in Physics",
-      "date": "1921-11-01",
-      "awarder": "Royal Swedish Academy of Sciences",
-      "summary": "The Nobel Prizes are five separate prizes that, according to Alfred Nobel's will of 1895, are awarded to 'those who, during the preceding year, have conferred the greatest benefit to humankind.'"
-    }
+
   ],
   "certificates": [],
   "publications": [],
   "skills": [],
   "languages": [
     {
-      "language": "German",
+      "language": "Croatian",
       "fluency": "Native speaker"
     },
     {

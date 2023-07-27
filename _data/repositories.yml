@@ -1,12 +1,9 @@
 github_users:
-  - torvalds
-  - alshedivat
+  - domagojhack
+  # - alshedivat
 
 github_repos:
-  - alshedivat/al-folio
-  - twbs/bootstrap
-  - jekyll/jekyll
-  - jquery/jquery
-  - FortAwesome/Font-Awesome
-  - jpswalsh/academicons
-  - mathjax/MathJax
+  - domagojhack/domagojhack.github.io
+  - tamaradjerdj/restox-software
+  - tamaradjerdj/EBEOBsys
+  - domagojhack/eco_nets
