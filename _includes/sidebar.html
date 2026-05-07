@@ -1,0 +1,69 @@
+<div class="sidebar-inner">
+
+  <div class="sidebar-profile">
+    <a href="{{ '/' | relative_url }}" class="profile-photo-link">
+      <img src="{{ '/assets/img/prof_pic.jpg' | relative_url }}"
+           alt="{{ site.first_name }} {{ site.last_name }}"
+           class="profile-photo">
+    </a>
+    <h1 class="profile-name">
+      <a href="{{ '/' | relative_url }}">{{ site.first_name }}<br>{{ site.last_name }}</a>
+    </h1>
+    {% if site.description %}
+    <p class="profile-desc">{{ site.description }}</p>
+    {% endif %}
+  </div>
+
+  <nav class="sidebar-nav">
+    <a href="{{ '/' | relative_url }}"{% if page.url == '/' %} class="active"{% endif %}>
+      <i class="fas fa-pen-to-square fa-fw"></i> Blog
+    </a>
+    <a href="{{ '/about/' | relative_url }}"{% if page.url contains '/about' %} class="active"{% endif %}>
+      <i class="fas fa-user fa-fw"></i> About
+    </a>
+    <a href="{{ '/publications/' | relative_url }}"{% if page.url contains '/publications' %} class="active"{% endif %}>
+      <i class="fas fa-book-open fa-fw"></i> Publications
+    </a>
+    <a href="{{ '/projects/' | relative_url }}"{% if page.url contains '/projects' %} class="active"{% endif %}>
+      <i class="fas fa-flask fa-fw"></i> Projects
+    </a>
+  </nav>
+
+  <div class="sidebar-contacts">
+    {% if site.email %}
+    <a href="mailto:{{ site.email }}" title="Email">
+      <i class="fas fa-envelope"></i>
+    </a>
+    {% endif %}
+    {% if site.github_username %}
+    <a href="https://github.com/{{ site.github_username }}" title="GitHub" target="_blank" rel="noopener">
+      <i class="fab fa-github"></i>
+    </a>
+    {% endif %}
+    {% if site.twitter_username %}
+    <a href="https://twitter.com/{{ site.twitter_username }}" title="Twitter / X" target="_blank" rel="noopener">
+      <i class="fab fa-twitter"></i>
+    </a>
+    {% endif %}
+    {% if site.scholar_userid %}
+    <a href="https://scholar.google.com/citations?user={{ site.scholar_userid }}" title="Google Scholar" target="_blank" rel="noopener">
+      <i class="ai ai-google-scholar"></i>
+    </a>
+    {% endif %}
+    {% if site.orcid_id %}
+    <a href="https://orcid.org/{{ site.orcid_id }}" title="ORCID" target="_blank" rel="noopener">
+      <i class="ai ai-orcid"></i>
+    </a>
+    {% endif %}
+    {% if site.linkedin_username %}
+    <a href="https://linkedin.com/in/{{ site.linkedin_username }}" title="LinkedIn" target="_blank" rel="noopener">
+      <i class="fab fa-linkedin"></i>
+    </a>
+    {% endif %}
+  </div>
+
+  {% if site.contact_note %}
+  <p class="contact-note">{{ site.contact_note }}</p>
+  {% endif %}
+
+</div>

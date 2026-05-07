@@ -1,11 +1,34 @@
-_site
-.bundle
-.sass-cache
-.jekyll-cache
-.jekyll-metadata
-.DS_store
-.ruby-version
-.tweet-cache
-Gemfile.lock
-vendor
+# Jekyll build output
+_site/
 
+# Jekyll caches
+.jekyll-cache/
+.jekyll-metadata
+.sass-cache/
+
+# Bundler / Ruby gem cache
+.gem_cache/
+.bundle/
+vendor/
+Gemfile.lock
+
+# Ruby version managers
+.ruby-version
+
+# Twitter plugin cache
+.tweet-cache/
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Large compiled assets / binaries
+*.so
+*.o
+*.a
+*.dylib
+
+# Editor / OS
+.vscode/
+*.swp
+*~
