@@ -7,11 +7,11 @@ $(document).ready(function() {
       $(this).removeClass('table-dark');
     }
 
-    // only select tables that are not inside an element with "news" (about page) or "card" (cv page) class
+    // skip tables inside news, cards, code blocks, or blog post body
     if($(this).parents('[class*="news"]').length==0 &&
         $(this).parents('[class*="card"]').length==0 &&
-        $(this).parents('code').length == 0) {
-      // make table use bootstrap-table
+        $(this).parents('code').length == 0 &&
+        $(this).parents('.post-content').length == 0) {
       $(this).attr('data-toggle','table');
       // add some classes to make the table look better
       // $(this).addClass('table-sm');

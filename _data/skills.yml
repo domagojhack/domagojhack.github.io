@@ -1,33 +1,43 @@
 # Skill icons shown in the left sidebar.
 # icon: devicon CDN slug — browse at https://devicon.dev/
-# color: hex used as icon tint on hover (optional)
+# url: link opened when the icon is clicked
 
 - name: Python
   icon: python/python-original.svg
+  url: https://www.python.org
 
 - name: R
   icon: r/r-original.svg
+  url: https://www.r-project.org
 
 - name: Jupyter
   icon: jupyter/jupyter-original.svg
+  url: https://jupyter.org
 
 - name: NumPy
   icon: numpy/numpy-original.svg
+  url: https://numpy.org
 
 - name: Pandas
   icon: pandas/pandas-original.svg
+  url: https://pandas.pydata.org
 
 - name: PyTorch
   icon: pytorch/pytorch-original.svg
+  url: https://pytorch.org
 
 - name: Git
   icon: git/git-original.svg
+  url: https://git-scm.com
 
 - name: Docker
   icon: docker/docker-original.svg
+  url: https://www.docker.com
 
 - name: Linux
   icon: linux/linux-original.svg
+  url: https://kernel.org
 
 - name: Bash
   icon: bash/bash-original.svg
+  url: https://www.gnu.org/software/bash/
