@@ -213,6 +213,7 @@ exclude:
   - Gemfile
   - Gemfile.lock
   - vendor
+  - assets/jupyter/blog.ipynb
 keep_files:
   - CNAME
   - .nojekyll
