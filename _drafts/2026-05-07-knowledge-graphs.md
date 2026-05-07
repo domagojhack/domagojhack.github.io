@@ -1,247 +1,176 @@
 ---
 layout: post
-title: What is a knowledge graph?
+title: Knowledge graphs and LLMs — a new instrument for science
 date: 2026-05-07
-description: A structured introduction to knowledge graphs — what they are, how they work, and why biology is one of the domains where they matter most.
+description: New techniques in LLM-powered knowledge retrieval are making knowledge graphs essential for scientific exploration — enabling intricate inquiries and a fundamentally different way of reasoning over knowledge at scale.
 category: ai
-tags: [knowledge graph, graph database, ontology, RAG, AI, ecology, biodiversity, taxonomy]
+tags: [knowledge graph, LLM, RAG, ontology, ecology, biodiversity, scientific computing]
 ---
 
-Data is only as useful as the connections you can draw from it. A spreadsheet tells you that a species was observed at a location on a date. A knowledge graph tells you that the species *belongs to* a genus, the genus *is part of* a family, the location *lies within* a protected area, the date *falls inside* a drought period recorded by a climate model, and the species *competes with* another that was recorded at the same site three weeks earlier. The difference is the explicit encoding of relationships — and that is what knowledge graphs do.
+Science has always had two problems: generating knowledge and connecting it. The first has accelerated dramatically — genomics, remote sensing, ecological monitoring, and automated literature production are generating data faster than any field can absorb. The second problem has barely moved. The connections between a species observation in Croatia, a soil microbiology paper from 2019, a climate anomaly recorded in the Copernicus archive, and a gene expression dataset from a related experiment in Japan exist — but they live in separate databases, separate formats, and separate vocabularies. No researcher can traverse them. No search engine indexes their relationships. The knowledge is there, but it cannot be asked.
 
-Biology, more than most sciences, is built on relationships. Taxonomy is a hierarchy of containment. Ecology is a web of interactions. Genomics is a network of regulation. Every domain in the life sciences has always been, at its core, a knowledge graph — it just took us a while to build the tools to manage it that way.
+That is beginning to change. The combination of **knowledge graphs** and **large language models** is creating something genuinely new: the ability to pose intricate scientific questions across vast, heterogeneous bodies of knowledge and receive grounded, traceable answers. Not summaries of what individual documents say, but synthesised reasoning over the *structure* of what we know. This post argues that this combination is not an incremental improvement in literature search — it is a qualitatively different way of interacting with scientific knowledge, and biology is one of the domains where it will matter most.
 
-## The basic idea
+## The problem with how science stores knowledge
 
-A knowledge graph is a network of entities and the typed relationships between them. Formally, it is a collection of **triples**:
+Consider a question that any ecologist might ask:
 
-```
-(subject) — [predicate] → (object)
-```
+> *Which soil invertebrate taxa, recorded in post-flood Pannonian wetlands, have functional traits associated with organic matter decomposition, and what does the literature say about their resilience to drought stress?*
 
-A biological example immediately makes this concrete:
+This question requires simultaneously traversing:
+- A taxonomic hierarchy (identifying the relevant taxa)
+- An occurrence database (filtering by habitat and geography)
+- A trait database (linking taxa to functional roles)
+- A climate event database (identifying the relevant disturbance history)
+- The primary literature (synthesising what is known about drought resilience)
 
-```
-(Lumbricus terrestris) — [is_a]           → (species)
-(Lumbricus terrestris) — [belongs_to]     → (Lumbricidae)
-(Lumbricus terrestris) — [inhabits]       → (temperate deciduous forest)
-(Lumbricus terrestris) — [feeds_on]       → (decomposing organic matter)
-(Lumbricus terrestris) — [improves]       → (soil aeration)
-(Lumbricus terrestris) — [is_prey_of]     → (Turdus merula)
-(Turdus merula)        — [is_a]           → (species)
-(Turdus merula)        — [belongs_to]     → (Turdidae)
-```
+Today, answering this takes weeks of manual work — downloading from GBIF, cross-referencing trait databases, running literature searches, resolving taxonomic synonyms across sources, then synthesising by hand. The bottleneck is not data. The bottleneck is the absence of a structure that connects these layers and a tool that can reason across them.
 
-Chain enough triples together and you can ask questions that no single table could answer:
+Knowledge graphs are the structure. LLMs are now becoming the reasoning layer on top.
 
-> *Which bird species prey on organisms that improve soil aeration in temperate deciduous forests?*
+## What a knowledge graph actually is
 
-A graph database traverses that chain in milliseconds. A relational database would require three or four JOINs — if the schema even modelled those relationships at all.
-
-## Nodes, edges, and labels
-
-| Term | Meaning |
-|------|---------|
-| **Node** (or entity) | A thing — a species, a gene, a habitat, an observation, a publication |
-| **Edge** (or relation) | A directed, labelled connection between two nodes |
-| **Triple** | One (subject, predicate, object) statement |
-| **Ontology** | The schema — the defined set of entity types and the allowed relations between them |
-
-The critical word in "labelled connection" is *labelled*. Generic graphs have edges; knowledge graphs have edges with meaning. `is_a`, `part_of`, `eats`, `located_in`, `regulates`, `transmits`, `co_occurs_with` — the label is what separates structured biological knowledge from a hairball of nodes.
-
-## Biology already thinks in graphs
-
-Biologists have been constructing knowledge graphs for centuries — they just called them other things.
-
-**Taxonomic hierarchies** are the oldest and most universal example. The Linnaean system is a directed acyclic graph: every taxon is connected to its parent by a `part_of` or `is_a` relation. The NCBI Taxonomy database, which is the backbone used by GenBank, GBIF, and most biodiversity informatics platforms, contains over 2.3 million named taxa connected into a single rooted tree. It is, structurally, a knowledge graph.
-
-**Food webs** are ecological knowledge graphs. Nodes are species or functional groups; edges are `eats` / `is_eaten_by` relations, often annotated with interaction strength, frequency, or body-mass ratio. Analysing food web topology — path lengths, trophic levels, keystone species — is a standard application of graph theory in ecology.
-
-**Gene regulatory networks** connect transcription factors to their target genes via `activates` and `represses` edges, genes to proteins via `encodes`, and proteins to biological processes via `participates_in`. The Gene Ontology (GO) formalises this into a shared vocabulary used across every model organism database on the planet.
-
-**Host-parasite and vector networks** are graphs by nature: a mosquito species `transmits` a pathogen `to` a vertebrate host, the host `is_found_in` a habitat, the habitat `overlaps_with` a human-modified landscape. Understanding disease transmission is fundamentally a graph traversal problem.
-
-## Biological ontologies: the shared vocabularies
-
-A knowledge graph is only as useful as the consistency of its vocabulary. If one dataset says `preys_on` and another says `feeds_on` and a third says `eats`, a query engine cannot equate them. Biological ontologies solve this by defining canonical terms and their logical relationships.
-
-The **OBO Foundry** is the community standard for biological ontologies. Key members:
-
-| Ontology | Covers |
-|----------|--------|
-| **Gene Ontology (GO)** | Molecular function, biological process, cellular component |
-| **NCBI Taxonomy** | All described taxa, their ranks and hierarchical relationships |
-| **Environment Ontology (ENVO)** | Habitats, biomes, environmental materials |
-| **Relation Ontology (RO)** | Standardised biological relations (`eats`, `parasitizes`, `located_in`, …) |
-| **Phenotype and Trait Ontology (PATO)** | Organism qualities and phenotypic descriptions |
-| **Darwin Core** | Occurrence records, sampling events, measurements |
-
-**Darwin Core** deserves special mention. It is the standard vocabulary for biodiversity occurrence data — the schema used by GBIF, iNaturalist, and most national biodiversity databases. When you download a GBIF occurrence dataset, every column name (`scientificName`, `decimalLatitude`, `eventDate`, `samplingProtocol`) is a Darwin Core term. The dataset is a flat table, but the terms are drawn from an ontology that specifies their meaning and relationships. The table becomes a knowledge graph the moment you start joining across the taxonomy backbone and the spatial hierarchy.
-
-**GBIF itself** is one of the largest biological knowledge graphs in existence. Its backbone taxonomy links over 9 million species names through synonymy, hierarchy, and authorship. Every occurrence record links a taxon node to a location node (with spatial geometry) to a date node to an observer node to a dataset node. At full scale, this is hundreds of millions of triples.
-
-## A fuller ecological example
-
-Here is what a knowledge graph looks like when it integrates taxonomy, observations, ecology, and environmental context for a real field dataset:
+A knowledge graph stores information as a network of entities and typed relationships between them. Every statement is a **triple**:
 
 ```
-# Taxonomy
-(Lumbricus terrestris)  — [is_a]           → (species)
-(Lumbricus terrestris)  — [belongs_to]     → (Lumbricidae)
-(Lumbricidae)           — [belongs_to]     → (Haplotaxida)
-(Haplotaxida)           — [belongs_to]     → (Oligochaeta)
-(Oligochaeta)           — [belongs_to]     → (Annelida)
-
-# Ecological roles
-(Lumbricus terrestris)  — [functional_group] → (decomposer)
-(Lumbricus terrestris)  — [feeds_on]          → (organic_litter)
-(Lumbricus terrestris)  — [ecosystem_service] → (soil_bioturbation)
-(Lumbricus terrestris)  — [is_prey_of]        → (Turdus merula)
-(Lumbricus terrestris)  — [is_prey_of]        → (Talpa europaea)
-
-# Observations linking to taxonomy and space
-(obs_042)  — [records]       → (Lumbricus terrestris)
-(obs_042)  — [at_location]   → (plot_A)
-(obs_042)  — [on_date]       → (2023-04-15)
-(obs_042)  — [method]        → (hand_sorting)
-(obs_042)  — [count]         → 14
-
-# Spatial context
-(plot_A)        — [located_in]   → (Kopački rit)
-(plot_A)        — [soil_type]    → (fluvisol)
-(Kopački rit)   — [is_a]         → (Ramsar_wetland)
-(Kopački rit)   — [ecoregion]    → (Pannonian_mixed_forests)
-
-# Environmental conditions linked to the survey date
-(2023-04-15)    — [soil_moisture]   → 0.42
-(2023-04-15)    — [soil_temp_C]     → 12.3
-(2023-04-15)    — [during]          → (spring_survey_2023)
-(spring_survey_2023) — [follows]    → (2022_drought_event)
+(subject)  —  [predicate]  →  (object)
 ```
 
-With this graph you can answer questions that span every layer:
+The power is in the predicate. Generic databases store rows. Knowledge graphs store *meaning*:
 
-- *Which decomposer species were observed in Ramsar wetlands during surveys that followed a drought event?*
-- *What ecosystem services are provided by species in the Oligochaeta that have been recorded on fluvisol soils?*
-- *Which predators of Lumbricus terrestris co-occur in the same ecoregion as plots with high soil moisture?*
+```
+(Lumbricus terrestris) — [belongs_to]      → (Lumbricidae)
+(Lumbricus terrestris) — [functional_group] → (decomposer)
+(Lumbricus terrestris) — [feeds_on]        → (organic_litter)
+(Lumbricus terrestris) — [is_prey_of]      → (Turdus merula)
+(Lumbricus terrestris) — [sensitive_to]    → (soil_compaction)
+(plot_A)               — [located_in]      → (Kopački rit)
+(plot_A)               — [soil_type]       → (fluvisol)
+(Kopački rit)          — [is_a]            → (Ramsar_wetland)
+(Kopački rit)          — [experienced]     → (2022_drought_event)
+(obs_042)              — [records]         → (Lumbricus terrestris)
+(obs_042)              — [at_location]     → (plot_A)
+(obs_042)              — [on_date]         → (2023-04-15)
+```
 
-These are not exotic queries — they are the kinds of questions ecologists ask constantly. The problem is that the answers are currently locked inside separate spreadsheets, taxonomic databases, and climate datasets that do not talk to each other.
+Now ask: *Which decomposer species were observed in Ramsar wetlands after a drought event, at sites with fluvisol soils?* A graph engine traverses this in one query. A relational database would need four or five JOINs across tables that probably do not exist in a single schema. A language model asked cold would likely hallucinate a plausible but unverifiable answer.
 
-## Building a biological knowledge graph in Python
+The graph makes the question answerable *and* the answer auditable — every step in the reasoning path is a named edge that can be inspected and corrected.
 
-Starting from a typical GBIF-style occurrence DataFrame, building a knowledge graph is straightforward with NetworkX:
+## Biology as a knowledge graph — the infrastructure already exists
+
+Here is what makes biology particularly well-positioned for this transition: the field has been building knowledge graph infrastructure for decades, largely without calling it that.
+
+**Taxonomic hierarchies** are directed graphs. The NCBI Taxonomy — the backbone used by GenBank, GBIF, and most biodiversity informatics platforms — contains over 2.3 million named taxa connected by `is_a` and `part_of` relations into a single rooted tree. Every accession number in GenBank is a node attached to this graph.
+
+**The Gene Ontology (GO)** is one of the most successful biological knowledge graphs ever built. It defines three structured vocabularies — molecular function, biological process, cellular component — and connects them through `is_a`, `part_of`, and `regulates` relations. Tens of millions of gene product annotations in every model organism database are expressed as triples against this ontology.
+
+**The OBO Foundry** provides a suite of interoperable biological ontologies that collectively cover the vocabulary of the life sciences:
+
+| Ontology | What it models |
+|----------|---------------|
+| NCBI Taxonomy | All described taxa and their hierarchical relationships |
+| Gene Ontology (GO) | Molecular function, biological process, cellular component |
+| Environment Ontology (ENVO) | Habitats, biomes, environmental materials |
+| Relation Ontology (RO) | Standardised biological predicates (`eats`, `parasitizes`, `located_in`, …) |
+| Phenotype and Trait Ontology (PATO) | Organism qualities and phenotypic descriptions |
+| Darwin Core | Occurrence records, sampling events, measurements |
+
+**GBIF** is the world's largest biodiversity knowledge graph in operational use. Its backbone taxonomy links over 9 million species names through synonymy and hierarchy. Every occurrence record links a taxon node to a location, a date, an observer, a dataset, and an institution. At full scale, this amounts to hundreds of millions of triples, queryable through APIs and SPARQL endpoints.
+
+The raw material for a biological knowledge graph at civilisational scale already exists. What has been missing is the reasoning layer that makes it explorable by scientists asking natural-language questions.
+
+## What LLMs change
+
+A language model alone is a poor tool for scientific reasoning. It has absorbed enormous amounts of biological literature, but it cannot reliably distinguish what it knows from what it is confabulating. Ask it about the drought tolerance of a specific earthworm species in a specific bioregion and it will give you an answer — fluent, confident, and quite possibly wrong.
+
+A knowledge graph alone is also limited. You can query it with precision, but only for questions you have already thought to ask in the exact structure the schema supports. It does not synthesise. It does not generalise. It does not bridge from a precise factual retrieval to the broader scientific context.
+
+Together, they compensate for each other's weaknesses.
+
+The architecture that makes this work is called **graph-augmented retrieval** (a specialisation of RAG). The idea is to use the language model's ability to understand a natural language question, convert it into a graph query, retrieve a relevant subgraph, and then reason over that grounded context rather than over parametric memory alone:
+
+```
+Natural language question
+        │
+        ▼
+  LLM parses intent → structured graph query
+        │
+        ▼
+  Graph traversal → relevant subgraph (verified triples)
+        │
+        ▼
+  LLM reasons over subgraph → answer with traceable provenance
+```
+
+The result is qualitatively different from a search engine hit or a plain LLM response. Every claim in the answer is backed by a specific triple in a specific database. When the answer is wrong, the error is in the graph — and graphs can be corrected, versioned, and maintained without retraining the model.
+
+## The scientific questions this enables
+
+What changes when you have this capability is the *scale and intricacy* of questions that become answerable in a single session rather than a multi-week research project.
+
+**Cross-domain synthesis.** A question like *"Which invertebrate taxa associated with soil bioturbation in European wetlands also appear in the IUCN threatened species list, and what do the last five years of primary literature say about the mechanisms of their vulnerability?"* previously required a team of researchers and months of work. A knowledge graph connecting GBIF occurrences, functional trait databases, the IUCN Red List, and a literature index makes this a single traversal followed by a synthesising prompt.
+
+**Hypothesis generation at scale.** Knowledge graphs make it possible to systematically scan for structural patterns — species with similar trait profiles that have diverged in extinction risk, ecological network motifs that correlate with resilience, genes that participate in the same biological process across distantly related organisms. These are not questions with known answers that you search for. They are patterns in the *structure* of the knowledge that only become visible when the knowledge is formally connected.
+
+**Integrating heterogeneous data.** A mosquito vector surveillance graph can connect occurrence records, host range data, pathogen associations, land-use change layers, and climate projections into a single queryable structure. The question *"In which areas of the Adriatic coast is the projected range expansion of Aedes albopictus likely to intersect with populations of immunocompromised hosts and existing gaps in surveillance?"* is a multi-hop graph query, not a keyword search. The answer requires simultaneously reasoning over taxonomy, medical demography, spatial data, and climate models.
+
+**Literature as structured knowledge.** LLMs can now extract triples from unstructured text with reasonable accuracy — meaning that published papers, field reports, and grey literature can be progressively converted into graph edges. A knowledge graph that grows by ingesting the literature is a form of machine-assisted knowledge accumulation that does not depend on anyone manually curating every relationship.
+
+## Building it in practice
+
+The entry point in Python is straightforward. Starting from a GBIF occurrence export:
 
 ```python
 import networkx as nx
 import pandas as pd
 
-# Suppose occurrences is a DataFrame with columns:
-# species, family, order, class, phylum, locality, habitat, date, count
-occurrences = pd.read_csv("occurrences.csv")
-
+occ = pd.read_csv("occurrences.csv")
 G = nx.MultiDiGraph()
 
-for _, row in occurrences.iterrows():
+for _, row in occ.iterrows():
     sp = row["species"]
 
     # Taxonomic chain
-    G.add_node(sp,              node_type="species")
-    G.add_node(row["family"],   node_type="family")
-    G.add_node(row["order"],    node_type="order")
-    G.add_node(row["class"],    node_type="class")
+    for child, parent, rank in [
+        (sp,             row["family"], "belongs_to"),
+        (row["family"],  row["order"],  "belongs_to"),
+        (row["order"],   row["class"],  "belongs_to"),
+    ]:
+        G.add_node(child, node_type=rank)
+        G.add_edge(child, parent, relation="belongs_to")
 
-    G.add_edge(sp, row["family"], relation="belongs_to")
-    G.add_edge(row["family"], row["order"], relation="belongs_to")
-    G.add_edge(row["order"],  row["class"], relation="belongs_to")
+    # Observation
+    obs = f"obs_{row.name}"
+    G.add_node(obs, node_type="observation",
+               count=row["individualCount"], date=row["eventDate"])
+    G.add_edge(obs, sp,             relation="records")
+    G.add_edge(obs, row["locality"], relation="at_location")
 
-    # Observation node
-    obs_id = f"obs_{_}"
-    G.add_node(obs_id, node_type="observation", count=row["count"], date=row["date"])
-    G.add_edge(obs_id, sp,             relation="records")
-    G.add_edge(obs_id, row["locality"], relation="at_location")
+    # Habitat
+    if pd.notna(row.get("habitat")):
+        G.add_edge(sp, row["habitat"], relation="found_in")
 
-    # Habitat link
-    G.add_edge(sp, row["habitat"], relation="found_in")
-
-# Multi-hop query: all species found in a given habitat type
-habitat = "fluvisol"
-species_in_habitat = [
-    u for u, v, d in G.in_edges(habitat, data=True)
+# Multi-hop: all families recorded in fluvisol habitats
+fluvisol_species = {
+    u for u, v, d in G.in_edges("fluvisol", data=True)
     if d["relation"] == "found_in"
-]
-
-# Extend: which families do those species belong to?
-families = set()
-for sp in species_in_habitat:
-    for _, fam, d in G.out_edges(sp, data=True):
-        if d["relation"] == "belongs_to":
-            families.add(fam)
-
-print(f"Families recorded on {habitat}: {families}")
+}
+families = {
+    v for sp in fluvisol_species
+    for _, v, d in G.out_edges(sp, data=True)
+    if d["relation"] == "belongs_to"
+}
 ```
 
-For a production system — or when the graph exceeds a few hundred thousand nodes — Neo4j with the Cypher query language scales far better. The same graph built above translates directly:
+Once the graph exists, dropping in a LangChain graph retriever against it — or exporting to Neo4j for Cypher queries — adds the natural language layer. The graph does not need to be complete to be useful; even a partial connection of occurrence data, taxonomy, and a trait table opens up queries that were previously infeasible.
 
-```cypher
-// Load all species and their taxonomy
-MATCH (s:Species)-[:BELONGS_TO]->(f:Family)-[:BELONGS_TO]->(o:Order)
-// Find observations linked to a specific habitat
-MATCH (obs:Observation)-[:RECORDS]->(s)
-MATCH (s)-[:FOUND_IN]->(h:Habitat {name: "fluvisol"})
-RETURN s.name, f.name, o.name, COUNT(obs) AS n_observations
-ORDER BY n_observations DESC
-```
+## A different relationship with knowledge
 
-## Knowledge graphs and biological AI
+What is at stake here is not a better literature search. It is a different relationship between a scientist and the total body of knowledge in their field.
 
-Large language models trained on scientific literature have absorbed a great deal of biology, but they hallucinate — they generate plausible species names, interactions, and ecological claims that are simply wrong. A knowledge graph grounded in verified occurrence records and curated ontologies provides the factual backbone that LLMs lack.
+Today, a researcher's effective knowledge is bounded by what they have personally read, what their collaborators know, and what a keyword search surfaces. Knowledge graphs with LLM reasoning layers extend that boundary considerably. They make it possible to reason over connections that no single person has made, to find patterns in the structure of knowledge rather than in individual documents, and to ask questions at a scale and complexity that would previously have required a dedicated research programme.
 
-In a biological graph-RAG pipeline:
+For biology — a field sitting on top of the largest, most structurally complex, most rapidly growing knowledge base in science — this matters acutely. The species interactions, taxonomic relationships, functional traits, genomic annotations, ecological observations, and climate linkages are all there. The ontologies that define their vocabulary are maintained. The databases that hold the data are publicly accessible. What has been missing is the capacity to reason over all of it simultaneously.
 
-```
-User: "Which earthworm species in Croatia improve soil structure
-       and are threatened by agricultural land use?"
-
-  │
-  ▼
-Embed query → vector search over species nodes
-  │
-  ▼
-Graph traversal:
-  species → ecosystem_service = soil_bioturbation
-  species → range_includes = Croatia
-  species → threat = agricultural_intensification
-  │
-  ▼
-Inject subgraph as context → LLM generates answer
-  grounded in verified GBIF + IUCN data
-```
-
-The answer is no longer a confident confabulation — it is traceable to specific nodes and edges that can be audited, corrected, or updated when the underlying data changes. For conservation decisions, species monitoring reports, or systematic literature reviews, this difference matters.
-
-## How knowledge graphs are stored
-
-**Triple stores** (Apache Jena, Stardog, Blazegraph) store RDF triples natively and are queried with SPARQL. The NCBI Taxonomy, Gene Ontology, and Wikidata all expose SPARQL endpoints. If you want to query "all Ramsar wetland sites in the Pannonian bioregion that contain at least three Oligochaeta species in the GBIF backbone," SPARQL across federated endpoints is the right tool.
-
-**Property graph databases** (Neo4j, Amazon Neptune, Memgraph) attach key-value properties to both nodes and edges, and are queried with Cypher or Gremlin. Better for application development, easier to integrate with Python backends, and more performant for deep traversals on large graphs.
-
-**In-memory / embedded** (NetworkX, RDFLib, igraph) work well for smaller graphs, exploratory analysis, and prototyping. I build NetworkX graphs from occurrence DataFrames regularly as a first step before deciding whether a persistent database is needed.
-
-## When to use a knowledge graph in biology
-
-**Use one when:**
-- You are integrating data across multiple sources with different schemas (occurrence databases, trait databases, climate data, literature)
-- Your entities have deeply hierarchical relationships — taxonomy, anatomy, process hierarchies
-- You need to answer multi-hop questions across entity types
-- You are building an AI assistant that needs to reason over biological facts without hallucinating
-
-**Stick with relational tables when:**
-- You have a stable schema and queries are mostly aggregations on a single entity type
-- You are working with a single occurrence dataset and simple spatial / temporal filters
-- The team is more comfortable with SQL than Cypher or SPARQL
-
-Ecological informatics sits at the crossroads: the raw occurrence data is tabular, but the knowledge needed to interpret it — taxonomy, trait ecology, biogeography, conservation status — is inherently graph-shaped. Bridging the two is one of the more interesting data engineering challenges in modern biodiversity science.
-
----
-
-Knowledge graphs have been a formal concept since the 1980s, but biology was doing it long before that — every taxonomic revision, every food web diagram, every gene interaction map is a knowledge graph that needed better tooling. That tooling now exists: graph databases are mature, biological ontologies are well-maintained, and the LLM integration story is starting to make sense. The gap between "we have all this data" and "we can actually reason over it" has never been smaller.
+That capacity is now, finally, becoming available.
