@@ -1,33 +1,33 @@
 <div class="sidebar-inner">
 
   <div class="sidebar-profile">
-    <a href="{{ '/' | relative_url }}" class="profile-photo-link">
+    <a href="{{ '/' | relative_url }}">
       <img src="{{ '/assets/img/prof_pic.jpg' | relative_url }}"
            alt="{{ site.first_name }} {{ site.last_name }}"
            class="profile-photo">
     </a>
-    <h1 class="profile-name">
+    <h2 class="profile-name">
       <a href="{{ '/' | relative_url }}">{{ site.first_name }}<br>{{ site.last_name }}</a>
-    </h1>
-    {% if site.description %}
-    <p class="profile-desc">{{ site.description }}</p>
-    {% endif %}
+    </h2>
+    <p class="profile-title">{{ site.description }}</p>
   </div>
 
-  <nav class="sidebar-nav">
-    <a href="{{ '/' | relative_url }}"{% if page.url == '/' %} class="active"{% endif %}>
-      <i class="fas fa-pen-to-square fa-fw"></i> Blog
+  {% if site.sidebar_bio %}
+  <p class="sidebar-bio">{{ site.sidebar_bio }}</p>
+  {% endif %}
+
+  {% if site.data.skills %}
+  <div class="sidebar-skills">
+    {% for skill in site.data.skills %}
+    <a href="#" class="skill-icon" title="{{ skill.name }}" tabindex="-1">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/{{ skill.icon }}"
+           alt="{{ skill.name }}"
+           loading="lazy"
+           onerror="this.style.display='none'">
     </a>
-    <a href="{{ '/about/' | relative_url }}"{% if page.url contains '/about' %} class="active"{% endif %}>
-      <i class="fas fa-user fa-fw"></i> About
-    </a>
-    <a href="{{ '/publications/' | relative_url }}"{% if page.url contains '/publications' %} class="active"{% endif %}>
-      <i class="fas fa-book-open fa-fw"></i> Publications
-    </a>
-    <a href="{{ '/projects/' | relative_url }}"{% if page.url contains '/projects' %} class="active"{% endif %}>
-      <i class="fas fa-flask fa-fw"></i> Projects
-    </a>
-  </nav>
+    {% endfor %}
+  </div>
+  {% endif %}
 
   <div class="sidebar-contacts">
     {% if site.email %}
@@ -41,7 +41,7 @@
     </a>
     {% endif %}
     {% if site.twitter_username %}
-    <a href="https://twitter.com/{{ site.twitter_username }}" title="Twitter / X" target="_blank" rel="noopener">
+    <a href="https://twitter.com/{{ site.twitter_username }}" title="Twitter" target="_blank" rel="noopener">
       <i class="fab fa-twitter"></i>
     </a>
     {% endif %}
@@ -61,9 +61,5 @@
     </a>
     {% endif %}
   </div>
-
-  {% if site.contact_note %}
-  <p class="contact-note">{{ site.contact_note }}</p>
-  {% endif %}
 
 </div>

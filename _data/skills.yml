@@ -1,0 +1,33 @@
+# Skill icons shown in the left sidebar.
+# icon: devicon CDN slug — browse at https://devicon.dev/
+# color: hex used as icon tint on hover (optional)
+
+- name: Python
+  icon: python/python-original.svg
+
+- name: R
+  icon: r/r-original.svg
+
+- name: Jupyter
+  icon: jupyter/jupyter-original.svg
+
+- name: NumPy
+  icon: numpy/numpy-original.svg
+
+- name: Pandas
+  icon: pandas/pandas-original.svg
+
+- name: PyTorch
+  icon: pytorch/pytorch-original.svg
+
+- name: Git
+  icon: git/git-original.svg
+
+- name: Docker
+  icon: docker/docker-original.svg
+
+- name: Linux
+  icon: linux/linux-original.svg
+
+- name: Bash
+  icon: bash/bash-original.svg

@@ -10,32 +10,27 @@
 
 <body>
 
-  <div class="site-wrapper">
+  {% include topnav.html %}
 
-    <aside class="sidebar" id="sidebar">
+  <div class="site-body">
+
+    <aside class="left-sidebar">
       {% include sidebar.html %}
     </aside>
 
-    <div class="sidebar-overlay" id="sidebar-overlay"></div>
-
-    <main class="main-content">
-      <button class="menu-toggle" id="menu-toggle" aria-label="Toggle navigation">
-        <span></span><span></span><span></span>
-      </button>
-
-      <div class="content-inner">
+    <div class="site-content">
+      <div class="content-area">
         {{ content }}
       </div>
-
       <footer class="site-footer">
         <p>
           &copy; {{ 'now' | date: "%Y" }} {{ site.first_name }} {{ site.last_name }}
           {% if site.last_updated %}
-          &nbsp;&mdash;&nbsp; Last updated {{ site.time | date: "%B %Y" }}
+          &mdash; Last updated {{ site.time | date: "%B %Y" }}
           {% endif %}
         </p>
       </footer>
-    </main>
+    </div>
 
   </div>
 
@@ -44,24 +39,6 @@
   {% include scripts/misc.html %}
   {% include scripts/mathjax.html %}
   {% include scripts/badges.html %}
-
-  <script>
-    (function () {
-      var toggle = document.getElementById('menu-toggle');
-      var sidebar = document.getElementById('sidebar');
-      var overlay = document.getElementById('sidebar-overlay');
-      if (toggle) {
-        toggle.addEventListener('click', function () {
-          sidebar.classList.toggle('open');
-          overlay.classList.toggle('active');
-        });
-        overlay.addEventListener('click', function () {
-          sidebar.classList.remove('open');
-          overlay.classList.remove('active');
-        });
-      }
-    })();
-  </script>
 
 </body>
 </html>

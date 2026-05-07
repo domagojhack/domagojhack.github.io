@@ -2,44 +2,68 @@
 layout: default
 ---
 
-<header class="page-header">
-  <h2>Blog</h2>
-  {% if site.blog_description %}
-  <p class="page-subtitle">{{ site.blog_description }}</p>
-  {% endif %}
-</header>
+<div class="home-layout">
 
-{% assign posts = site.posts %}
-{% if posts.size > 0 %}
-<div class="post-list">
-  {% for post in posts %}
-  <article class="post-preview">
-    <div class="post-meta">
-      <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %-d, %Y" }}</time>
-      {% if post.category %}
-      <span class="post-category">{{ post.category }}</span>
-      {% elsif post.categories.size > 0 %}
-      <span class="post-category">{{ post.categories.first }}</span>
-      {% endif %}
-    </div>
-    <h3 class="post-title">
-      <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-    </h3>
-    {% if post.description %}
-    <p class="post-excerpt">{{ post.description }}</p>
+  {% assign latest = site.posts.first %}
+
+  <div class="home-post">
+    {% if latest %}
+    <article class="post-full">
+
+      <header class="post-header">
+        <div class="post-meta">
+          <time datetime="{{ latest.date | date_to_xmlschema }}">{{ latest.date | date: "%B %-d, %Y" }}</time>
+          {% if latest.category %}
+          <span class="post-category">{{ latest.category }}</span>
+          {% elsif latest.categories.size > 0 %}
+          <span class="post-category">{{ latest.categories.first }}</span>
+          {% endif %}
+        </div>
+        <h1 class="post-title">{{ latest.title }}</h1>
+        {% if latest.description %}
+        <p class="post-description">{{ latest.description }}</p>
+        {% endif %}
+        {% if latest.tags.size > 0 %}
+        <div class="post-tags">
+          {% for tag in latest.tags %}
+          <a href="{{ tag | slugify | prepend: '/blog/tag/' | prepend: site.baseurl }}" class="tag">{{ tag }}</a>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </header>
+
+      <div class="post-content">
+        {{ latest.content }}
+      </div>
+
+      <footer class="post-footer">
+        <a href="{{ latest.url | relative_url }}" class="post-permalink">Permalink &rarr;</a>
+      </footer>
+
+    </article>
     {% else %}
-    <p class="post-excerpt">{{ post.excerpt | strip_html | truncatewords: 45 }}</p>
+    <p class="empty-state">No posts yet. Check back soon.</p>
     {% endif %}
-    {% if post.tags.size > 0 %}
-    <div class="post-tags">
-      {% for tag in post.tags limit: 6 %}
-      <span class="tag">{{ tag }}</span>
+  </div>
+
+  <aside class="posts-nav">
+    <h3 class="posts-nav-heading">Earlier posts</h3>
+    {% assign older_posts = site.posts | offset: 1 %}
+    {% if older_posts.size > 0 %}
+    <div class="posts-nav-list">
+      {% for post in older_posts %}
+      <a href="{{ post.url | relative_url }}" class="posts-nav-item">
+        <time>{{ post.date | date: "%b %-d, %Y" }}</time>
+        <span class="posts-nav-title">{{ post.title }}</span>
+        {% if post.category %}
+        <span class="posts-nav-cat">{{ post.category }}</span>
+        {% endif %}
+      </a>
       {% endfor %}
     </div>
+    {% else %}
+    <p class="posts-nav-empty">Only one post so far.</p>
     {% endif %}
-  </article>
-  {% endfor %}
+  </aside>
+
 </div>
-{% else %}
-<p class="empty-state">No posts yet. Check back soon.</p>
-{% endif %}

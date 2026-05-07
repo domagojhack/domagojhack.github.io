@@ -9,6 +9,10 @@ last_name: K. Hackenberger
 email: domagojhack@gmail.com
 description: > # the ">" symbol means to ignore newlines until "footer_text:"
   Computational ecology
+sidebar_bio: >
+  Computational ecologist working at the intersection of AI, machine learning,
+  and environmental science — from earthworm taxonomy to marine microbiology
+  and high-performance ecological modelling.
 footer_text: >
   
 keywords: computational ecology, machine learning, ecology, modeling  # add your own keywords or leave empty
